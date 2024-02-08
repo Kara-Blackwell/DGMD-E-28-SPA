@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kara's Assignment #2 pt.2</title>
+
+    <style>
+        .header {
+        text-align: center;
+        font-size: 25px;
+    }
+    
+    .square { /* closet I could get it to display a 3x3 grid */
+        width: 100px;
+        height: 100px;
+        border: 2px solid #000000;
+        background-color: #ffffff;
+        display:grid;
+        float:left;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left:140px;
+        margin-right: 80px;
+    }
+
+    .square:hover {
+        font-weight:1000;
+        background-color:#aad06c;
+    }
+
+    .result {
+        text-align: center;
+        font-size: 25px;
+        border:2px solid #000000;
+        width: fit-content;
+        padding: 10px 20px;
+        margin: 10px;
+        margin-left: 492px;
+    }
+
+    .turn {
+        text-align: center;
+        font-size: 25px;
+        border:2px solid #000000;
+        width: fit-content;
+        padding: 10px 20px;
+        margin: 10px;
+        margin-left: 500px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="header"><h1>Tic-Tac-Toe: JS Edition!</h1></div>
+
+    <div class="turn">Placeholder for turn</div>
+
+    <div class="result">Placeholder for result</div>
+
+    <script>
+        const NUM_SQUARES = 9;
+        for (i=0; i<NUM_SQUARES; i++)
+        {
+        id = "sq"+i;
+        document.write( "<div class='square' id='" + id + "'></div>" );
+        }
+   </script>
+
+</body>
+</html>
