@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kara's Assigment #3</title>
+
+<style>
+body{
+  background-color: #ffffff;
+  color:#000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.grid{
+    width: 325px;
+    height: 325px;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+}
+
+.square{
+    width: 100px;
+    height: 100px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    margin: 2px;
+    color:#000000;
+    font-size: 90px;
+    text-align: center;
+}
+
+.square:hover{
+    background-color:#aad06c;
+}
+
+#status{
+    padding: 20px;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+button{
+    height: 40px;
+    width: 175px;
+    font-size: 18px;
+    color:#000000;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button:hover {
+    background-color: #2ef1a3;
+}
+</style>
+</head>
+
+<body>
+    <h1>Tic-Tac-Toe</h1>
+  
+    <div class="grid">
+        <div data-index="0" class="square"></div>
+        <div data-index="1" class="square"></div>
+        <div data-index="2" class="square"></div>
+        <div data-index="3" class="square"></div>
+        <div data-index="4" class="square"></div>
+        <div data-index="5" class="square"></div>
+        <div data-index="6" class="square"></div>
+        <div data-index="7" class="square"></div>
+        <div data-index="8" class="square"></div>
+    </div>
+    <div id="status">Play Now</div>
+    <button id="restart">RESTART GAME</button>
+
+<script>
+const squares=document.querySelectorAll('.square');
+const status=document.querySelector('#status');
+const button_Restart=document.querySelector('#restart');
+
+let player_x="X";
+let player_o="O";
+let current_Player = player_x;
+let player="X";
+let options=["","","","","","","","",""];
+let running=false;
+
+initial();
+function initial(){
+  squares.forEach(square=>square.addEventListener('click',squareClick));
+  status.textContent=`${player} Your Turn`;
+  running=true;
+}
+
+function squareClick(){
+  const index=this.dataset.index;
+  if(options[index]!="" || !running){
+    return;
+  }
+  updateSquare(this,index);
+  Winner();
+}
+
+function updateSquare(square,index){
+  options[index]=player;
+  square.innerHTML=current_Player;
+}
+
+</script>
+</body>
+</html>
