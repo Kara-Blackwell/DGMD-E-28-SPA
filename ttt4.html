@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kara's Assignment #4 pt. 1</title>
+
+<style type="text/css">
+    body{
+    background-color: #ffffff;
+    color:#000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    }
+
+    #board{
+    width: 375px;
+    }
+
+    .square {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-size: 90px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    }
+
+    .square:hover{
+    background-color:#aad06c;
+    }
+
+    #status{
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 25px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    }
+
+    button{
+    height: 40px;
+    width: 175px;
+    font-size: 18px;
+    color:#000000;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+    button:hover {
+        background-color: #eaf460;
+        font-weight:1000;
+    }
+</style>
+</head>
+
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div id="status">Play Now</div>
+    <button id="restart">START GAME</button>
+    <div id="board">
+    <br />
+    
+    <script>
+        const NUM_SQUARES = 9;
+        for (i=0; i<NUM_SQUARES; i++)
+        {
+            id = "sq"+i;
+            document.write( "<div class='square' id='" + id + "'></div>" );
+        }
+
+        const squares=document.querySelectorAll('.square');
+        const status=document.querySelector('#status');
+        const button_Restart=document.querySelector('#restart');
+
+
+        let current_Player = '';
+        const Players = ['X', 'O']
+        const player_1 = Players[0];
+        const player_2 = Players[1];
+    
+        let options=["","","","","","","","",""];
+        let running=false;
+
+        start();
+        function start(){
+        let randomPlayer = Math.floor(Math.random() *2);
+        if (randomPlayer == 0){
+            current_Player = player_1;
+            alert ("X WILL START THIS GAME")
+        } else {
+            current_Player = player_2;
+            alert ("O WILL START THIS GAME")
+        }
+        squares.forEach(square=>square.addEventListener('click',squareClick,{once:true}));
+        status.innerHTML=`${current_Player} Your Turn`;
+        running=true;
+        };
+
+        function squareClick(event){
+            if(current_Player === 1) {
+                event.target.innerText = "X"
+                status.innerHTML = "O, Your Turn"
+                board[event.target.id] = 1
+                current_Player = -1;
+            } else {
+                event.target.innerText = "O"
+                status.innerHTML = "X, Your Turn"
+                board[event.target.id] = -1
+                current_Player = 1;
+            }
+        }
+    </script>
+    </div>
+</body>
+</html>
