@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kara's Assigment #4 pt.2</title>
+
+<style>
+body{
+  background-color: #ffffff;
+  color:#000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.grid{
+    width: 325px;
+    height: 325px;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+}
+
+.square{
+    width: 100px;
+    height: 100px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    margin: 2px;
+    color:#000000;
+    font-size: 90px;
+    text-align: center;
+}
+
+.square:hover{
+    background-color:#aad06c;
+}
+
+#status{
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 25px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+}
+
+button{
+    height: 40px;
+    width: 175px;
+    font-size: 18px;
+    color:#000000;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button:hover {
+    background-color: #2ef1a3;
+}
+</style>
+</head>
+
+<body>
+    <h1>Tic-Tac-Toe</h1>
+  
+    <div class="grid">
+        <div data-index="0" class="square"></div>
+        <div data-index="1" class="square"></div>
+        <div data-index="2" class="square"></div>
+        <div data-index="3" class="square"></div>
+        <div data-index="4" class="square"></div>
+        <div data-index="5" class="square"></div>
+        <div data-index="6" class="square"></div>
+        <div data-index="7" class="square"></div>
+        <div data-index="8" class="square"></div>
+    </div>
+    <div id="status">Play Now</div>
+    <button id="restart">START GAME</button>
+
+<script>
+const squares=document.querySelectorAll('.square');
+const status=document.querySelector('#status');
+const button_Restart=document.querySelector('#restart');
+let player_x="X";
+let player_o="O";
+let current_Player=player_x;
+let player="X";
+let options=["","","","","","","","",""];
+let running=false;
+
+const win=[
+  [0,1,2],
+  [3,4,5],
+  [6,7,8],
+  [0,3,6],
+  [1,4,7],
+  [2,5,8],
+  [0,4,8],
+  [2,4,6]
+];
+
+start();
+
+function start(){
+  squares.forEach(square=>square.addEventListener('click',squareClick));
+  button_Restart.addEventListener('click',restart);
+  status.textContent=`${player} Your Turn`;
+  running=true;
+}
+
+function squareClick(){
+  const index=this.dataset.index;
+  if(options[index]!="" || !running){
+    return;
+  }
+  updateSquare(this,index);
+  Winner();
+}
+
+function updateSquare(square,index){
+  options[index]=player;
+  square.innerHTML=current_Player;
+}
+
+function player_Change(){
+    player=(player=='X') ? "O" :"X";
+    current_Player=(current_Player== player_x) ? player_o : player_x;
+    status.textContent=`${player} Your Turn`;
+}
+
+function Winner(){
+  let isWon=false;
+  for(let i=0;i<win.length;i++){
+    const condition=win[i];
+    const square1=options[condition[0]];
+    const square2=options[condition[1]];
+    const square3=options[condition[2]];
+    if(square1=="" || square2=="" || square3==""){
+      continue;
+    }
+    if(square1==square2 && square2==square3){
+      isWon=true;
+      squares[condition[0]].classList.add('win');
+      squares[condition[1]].classList.add('win');
+      squares[condition[2]].classList.add('win');
+    }
+  }
+
+  if(isWon){
+    status.textContent=`${player} Won!`;
+    running=false;
+  }else if(!options.includes("")){
+    status.textContent=`STALEMATE GAME!`;
+    running=false;
+  }else{
+    player_Change();
+  }
+}
+
+function restart(){
+  options=["","","","","","","","",""];
+  current_Player=player_x;
+  player="X";
+  running=true;
+  status.textContent=`${player} Your Turn`;
+
+  squares.forEach(square=>{
+      square.innerHTML="";
+      square.classList.remove('win');
+  });
+}
+
+  </script>
+</body>
+</html>
