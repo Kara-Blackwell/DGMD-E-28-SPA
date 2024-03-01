@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kara's Assignment #3</title>
+</head>
+
+<body>
+    <h1>Joe's Hotdogs Stand</h1>
+    <script>
+        //using an associative array of items and prices
+        items = [];
+        items['hotdogs'] = '4.00'
+        items['fries'] = '3.50'
+        items['soda'] = '1.50'
+        items['sauerkraut'] = '1.00'
+
+        for (prices in items)
+            document.write(prices + " = $" + items[prices] + "<br />")
+            document.write('<br>')
+
+        //using a JSON object
+        var items = {
+            "hotdogs":"4.00",
+            "fries":"3.50",
+            "soda":"1.50",
+            "sauerkraut":"1.00"
+        }
+        m = JSON.stringify(items)
+        document.write(m + "<br />")
+        document.write('<br>')
+
+        //using a function object
+        function Menu(item, price) 
+        {
+            this.item = item;
+            this.price = price;
+        }
+
+        var m1 = new Menu("hotdogs", 4.00);
+        var m2 = new Menu("fries", 3.50);
+        var m3 = new Menu("soda", 1.50);
+        var m4 = new Menu("sauerkraut", 1.00);
+
+        document.write (m.item + " $" + m.price + "<br />")
+        document.write('<br>')
+        
+        for (prices in items)
+           document.write(prices + " = $" + items[prices] + "<br />")
+
+
+    </script>
+</body>
+</html>

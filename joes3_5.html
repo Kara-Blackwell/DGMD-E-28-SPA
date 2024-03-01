@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kara's Assignment #3</title>
+<style type="text/css">
+    body{
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;    
+    }
+
+    .menu {
+    max-width: 300px;
+    margin: 5px; 
+    background: #ffffff; 
+    padding:30px;
+    width: 100%;
+    }
+
+    .item {
+    padding:5px; 
+    border:2px solid #000000; 
+    background-color: #cdcdca;
+    margin: 5px; 
+    border-radius:5px;
+    text-align:center;
+    }
+
+    .cartList {
+    padding:5px; 
+    border:2px solid #000000; 
+    background-color: #edf1a9;
+    margin: 5px; 
+    border-radius:5px;
+    text-align:left;
+    }
+</style>
+</head>
+<body>
+    <h1>Joe's Hotdog Stand</h1>
+        <div class="menu">
+            <div class="item" id="hotdog">
+                <h3>Hotdog</h3>
+                <p><span class="price">4.00</span></p>
+                <button>Add to cart</button>
+            </div>
+            <div class="item" id="fries">
+                <h3>Fries</h3>
+                <p><span class="price">3.50</span></p>
+                <button>Add to cart</button>
+            </div>
+            <div class="item" id="soda">
+                <h3>Soda</h3>
+                <p><span class="price">1.50</span></p>
+                <button>Add to cart</button>
+            </div>
+            <div class="item" id="sauerkraut">
+                <h3>Sauerkraut</h3>
+                <p><span class="price">1.00</span></p>
+                <button>Add to cart</button>
+            </div>
+    <div class="cartList">
+        <h2>Cart</h2>
+        <ul id="cart"></ul>
+        <div id="total">Total: $0</div>
+    </div>
+</div>
+<button onclick="checkout()" id = "checkout">Checkout</button>
+        
+    <script>
+        const menu = document.querySelectorAll('.item');
+        const cart = document.getElementById('cart');
+        const totalElement = document.getElementById('total'); 
+        const selected = {};
+
+        function handleCardClick(event) {
+            const item = event.currentTarget;
+            const itemId = item.id;
+            const itemName = item.querySelector('h3').textContent;
+            const itemPrice = parseFloat(item.querySelector('.price').textContent); 
+
+            if (selected[itemId]) {
+                selected[itemId].count++;
+            } else {
+                selected[itemId] = {
+                    name: itemName,
+                    price: itemPrice,
+                    count: 1,
+                };
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            cart.innerHTML = '';
+            let total = 0; 
+
+            for (const itemId in selected) {
+                const item = selected[itemId];
+                const listItem = document.createElement('li');
+                const quantityContainer = document.createElement('div'); 
+                const quantityText = document.createElement('span'); 
+
+                quantityText.textContent = item.count; 
+                quantityContainer.appendChild(quantityText); 
+
+                listItem.textContent = `${item.name} - $${item.price * item.count}`;
+                listItem.appendChild(quantityContainer); 
+                cart.appendChild(listItem);
+
+                total += item.price * item.count; 
+            }
+
+            totalElement.textContent = `total: $${total.toFixed(2)}`; 
+        }
+
+        menu.forEach((item) => {
+            item.addEventListener('click', handleCardClick);
+        });
+
+        
+        function checkout() {
+            alert("Your " + totalElement.textContent);
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
