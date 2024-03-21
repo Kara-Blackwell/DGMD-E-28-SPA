@@ -203,6 +203,7 @@
                 'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
                 'X-RapidAPI-Key': '58d791cf38mshdca8125981c88bep125d9fjsn5da891684c64',
             },
+  
         })
 
         .then((res) => {
@@ -218,13 +219,14 @@
                 const letterId = firstLetterId + index;
                 const letterEl = document.getElementById(letterId);
                 letterEl.style = `background-color:${color};border-color:${color}`;
-            }, interval * index);
+            },  
+            interval * index);
             });
 
             guessedCount += 1;
 
             if (currentWord === word) {
-            window.alert("Congratulations, you've won!");
+            window.alert("That's the word, you've won!");
             }
 
             if (guessed.length === 6) {
@@ -236,6 +238,8 @@
         .catch(() => {
             window.alert("not a word within the list");
         });
+
+        console.log(word);
     }
 
     function createBoxes() {
