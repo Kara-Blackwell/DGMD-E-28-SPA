@@ -135,13 +135,12 @@
     const letters = document.querySelectorAll(".keyboard-row button");
 
     function newWord() {
-        fetch(
-        `https://random-word-api.p.rapidapi.com/?random=true&lettersMin=5&lettersMax=5`,
+        fetch(`https://wordsapiv1.p.rapidapi.com/words/?random=true&lettersMin=5&lettersMax=5`,
         {
             method: "GET",
             headers: {
+                'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
                 'X-RapidAPI-Key': '58d791cf38mshdca8125981c88bep125d9fjsn5da891684c64',
-		        'X-RapidAPI-Host': 'random-word-api.p.rapidapi.com'
             },
         }
         )
@@ -198,13 +197,14 @@
 
         const currentWord = currentWordArr.join("");
 
-        fetch(`https://random-word-api.p.rapidapi.com/${currentWord}`, {
-        method: "GET",
-        headers: {
-            'X-RapidAPI-Key': '58d791cf38mshdca8125981c88bep125d9fjsn5da891684c64',
-		    'X-RapidAPI-Host': 'random-word-api.p.rapidapi.com'
-        },
+        fetch(`https://wordsapiv1.p.rapidapi.com/words/${currentWord}`, {
+            method: "GET",
+            headers: {
+                'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
+                'X-RapidAPI-Key': '58d791cf38mshdca8125981c88bep125d9fjsn5da891684c64',
+            },
         })
+
         .then((res) => {
             if (!res.ok) {
             throw Error();
