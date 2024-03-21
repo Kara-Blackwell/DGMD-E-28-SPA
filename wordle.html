@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kara's Wordle</title>
+    
+    <style>
+    html, body {
+    height: 100%;
+    }
+    
+    h1 {
+        text-align: center;
+    }
+
+    #page {
+    display: flex;
+    background-color: #ffffff;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    }
+
+    #game {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    }
+
+    #board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    }
+
+    #board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    padding: 10px;
+    }
+
+    .box {
+    border: 2px solid #a3a3a3;
+    border-radius: 2px;
+    min-width: 60px;
+    min-height: 60px;
+    font-size: 50px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .keyboard-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto 8px;
+    touch-action: manipulation;
+    }
+
+    .keyboard-row button {
+    padding: 10px;
+    cursor: pointer;
+    flex-grow: 1;
+    text-transform: uppercase;
+    margin: 1px;
+    border-radius: 4px;
+    }
+</style>
+</head>
+
+<body>
+    <div id="page">
+    <h1>Wordle Assignment</h1>
+        <div id="game">
+
+            <div id="board-container">
+            <div id="board"></div>
+            </div>
+
+            <div class="keyboard-row">
+                <button data-key="q">q</button>
+                <button data-key="w">w</button>
+                <button data-key="e">e</button>
+                <button data-key="r">r</button>
+                <button data-key="t">t</button>
+                <button data-key="y">y</button>
+                <button data-key="u">u</button>
+                <button data-key="i">i</button>
+                <button data-key="o">o</button>
+                <button data-key="p">p</button>
+            </div>
+            <div class="keyboard-row">
+                <button data-key="a">a</button>
+                <button data-key="s">s</button>
+                <button data-key="d">d</button>
+                <button data-key="f">f</button>
+                <button data-key="g">g</button>
+                <button data-key="h">h</button>
+                <button data-key="j">j</button>
+                <button data-key="k">k</button>
+                <button data-key="l">l</button>
+            </div>
+            <div class="keyboard-row">
+                <button data-key="enter">Enter</button>
+                <button data-key="z">z</button>
+                <button data-key="x">x</button>
+                <button data-key="c">c</button>
+                <button data-key="v">v</button>
+                <button data-key="b">b</button>
+                <button data-key="n">n</button>
+                <button data-key="m">m</button>
+                <button data-key="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    
+    createBoxes();
+    newWord();
+
+    let guessed = [[]];
+    let available = 1;
+
+    let word;
+    let guessedCount = 0;
+
+    const letters = document.querySelectorAll(".keyboard-row button");
+
+    function newWord() {
+        fetch(
+        `https://random-word-api.p.rapidapi.com/?random=true&lettersMin=5&lettersMax=5`,
+        {
+            method: "GET",
+            headers: {
+                'X-RapidAPI-Key': '58d791cf38mshdca8125981c88bep125d9fjsn5da891684c64',
+		        'X-RapidAPI-Host': 'random-word-api.p.rapidapi.com'
+            },
+        }
+        )
+        .then((response) => {
+            return response.json();
+        })
+        .then((res) => {
+            word = res.word;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+
+    function currentWordArray() {
+        const guessedWords = guessed.length;
+        return guessed[guessedWords - 1];
+    }
+
+    function boxColor(letter, index) {
+        const correctLetter = word.includes(letter);
+
+        if (!correctLetter) {
+        return "#3a3a3c";
+        }
+
+        const letterPosition = word.charAt(index);
+        const correctPosition = letter === letterPosition;
+
+        if (correctPosition) {
+        return "#538d4e";
+        }
+        return "#b59f3b";
+    }
+
+    function updateGuessedWords(letter) {
+        const currentWordArr = currentWordArray();
+
+        if (currentWordArr && currentWordArr.length < 5) {
+        currentWordArr.push(letter);
+
+        const availableEl = document.getElementById(String(available));
+
+        available = available + 1;
+        availableEl.textContent = letter;
+        }
+    }
+
+    function submitWord() {
+        const currentWordArr = currentWordArray();
+        if (currentWordArr.length !== 5) {
+        window.alert("not a 6 letter word, try again");
+        }
+
+        const currentWord = currentWordArr.join("");
+
+        fetch(`https://random-word-api.p.rapidapi.com/${currentWord}`, {
+        method: "GET",
+        headers: {
+            'X-RapidAPI-Key': '58d791cf38mshdca8125981c88bep125d9fjsn5da891684c64',
+		    'X-RapidAPI-Host': 'random-word-api.p.rapidapi.com'
+        },
+        })
+        .then((res) => {
+            if (!res.ok) {
+            throw Error();
+            }
+
+            const firstLetterId = guessedCount * 5 + 1;
+            const interval = 200;
+            currentWordArr.forEach((letter, index) => {
+            setTimeout(() => {
+                const color = boxColor(letter, index);
+                const letterId = firstLetterId + index;
+                const letterEl = document.getElementById(letterId);
+                letterEl.style = `background-color:${color};border-color:${color}`;
+            }, interval * index);
+            });
+
+            guessedCount += 1;
+
+            if (currentWord === word) {
+            window.alert("Congratulations, you've won!");
+            }
+
+            if (guessed.length === 6) {
+            window.alert(`no more guesses allowed. game over! The word is ${word}.`);
+            }
+
+            guessed.push([]);
+        })
+        .catch(() => {
+            window.alert("not a word within the list");
+        });
+    }
+
+    function createBoxes() {
+        const board = document.getElementById("board");
+
+        for (let index = 0; index < 30; index++) {
+        let box = document.createElement("div");
+        box.classList.add("box");
+        box.setAttribute("id", index + 1);
+        board.appendChild(box);
+        }
+    }
+
+    function deleteLetter() {
+        const currentWordArr = currentWordArray();
+        const removedLetter = currentWordArr.pop();
+
+        guessed[guessed.length - 1] = currentWordArr;
+
+        const lastLetterEl = document.getElementById(String(available - 1));
+
+        lastLetterEl.textContent = "";
+        available = available - 1;
+    }
+
+    for (let i=0; i<letters.length; i++) {
+        letters[i].onclick = ({ target }) => {
+        const letter = target.getAttribute("data-key");
+
+        if (letter === "enter") {
+            submitWord();
+            return;
+        }
+
+        if (letter === "delete") {
+            deleteLetter();
+            return;
+        }
+
+        updateGuessedWords(letter);
+        };
+    }
+    });
+
+</script>
+</body>
+</html>
