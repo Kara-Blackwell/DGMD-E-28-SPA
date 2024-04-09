@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Wordle React</title>
+<script src="https://unpkg.com/react@16.7.0/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.development.js"></script>
+    <style type="text/css">
+        h1 {text-align: center;}
+
+        .square {    
+        border: 2px solid #a3a3a3;
+        border-radius: 2px;
+        min-width: 60px;
+        max-width: 60px;
+        min-height: 60px;
+        font-size: 50px;
+        text-transform: uppercase;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        }
+
+        #board {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 5px;
+        padding: 10px;
+        width: 100%;
+        max-width: 300px;
+        }
+
+        .keyboard-row {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 8px;
+        touch-action: manipulation;
+        }
+
+        .keyboard-row button {
+        padding: 10px;
+        cursor: pointer;
+        text-transform: uppercase;
+        margin: 1px;
+        border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Wordle: React Version</h1>
+
+    <div id="app"></div>
+
+    <div class="keyboard-row">
+        <button>q</button>
+        <button>w</button>
+        <button>e</button>
+        <button>r</button>
+        <button>t</button>
+        <button>y</button>
+        <button>u</button>
+        <button>i</button>
+        <button>o</button>
+        <button>p</button>
+    </div>
+    <div class="keyboard-row">
+        <button>a</button>
+        <button>s</button>
+        <button>d</button>
+        <button>f</button>
+        <button>g</button>
+        <button>h</button>
+        <button>j</button>
+        <button>k</button>
+        <button>l</button>
+    </div>
+    <div class="keyboard-row">
+        <button>Enter</button>
+        <button>z</button>
+        <button>x</button>
+        <button>c</button>
+        <button>v</button>
+        <button>b</button>
+        <button>n</button>
+        <button>m</button>
+        <button>Delete</button>
+    </div>
+
+    <script>
+        function Square(face)
+        {
+            this.face = face;
+        }
+
+        squares = [
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square(""),
+            new Square("")
+        ]
+
+        var board = React.createElement("div", {id: "board"},
+            squares.map((item, i) =>
+                React.createElement("div", {key: i, className: 'square'}, item.face))
+                );
+        ReactDOM.render(board, app);
+    </script>
+</body>
+</html>
