@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Wordle Part 2</title>
+    <style>
+    html, body {
+    height: 100%;
+    }
+
+    h1 {
+    text-align: center;
+    }
+
+    #app {
+    display: flex;
+    background-color: #ffffff;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    }
+
+    .keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    }
+
+    .keyboard-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto 8px;
+    touch-action: manipulation;
+    }
+
+    .key {
+    padding: 10px;
+    cursor: pointer;
+    flex-grow: 1;
+    text-transform: uppercase;
+    margin: 1px;
+    border-radius: 4px;
+    }
+
+    .key:hover {
+    background-color: #ddd;
+    }
+
+    .selected {
+    background-color: #a0d2eb;
+    }
+
+    .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 5px;
+    padding: 10px;
+    border: 2px solid #a3a3a3;
+    }
+
+    .cell {
+    border: 2px solid #a3a3a3;
+    border-radius: 2px;
+    min-width: 60px;
+    min-height: 60px;
+    font-size: 50px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    </style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+
+  const { useState } = React;
+
+  const words = [
+    "might",
+    "flood",
+    "stray",
+  ];
+
+  const randomWord = () => words[Math.floor(Math.random() * words.length)];
+
+  const App = () => {
+    const [solution, setSolution] = useState(randomWord());
+    const [guess, setGuess] = useState("");
+    const [board, setBoard] = useState(Array(solution.length).fill(''));
+
+    const handleInputChange = (event) => {
+      setGuess(event.target.value.toLowerCase().slice(0, solution.length));
+    };
+
+    const handleSubmit = (event) => {
+      event.preventDefault();
+
+      const newBoard = [...board];
+      for (let i = 0; i < solution.length; i++) {
+        if (guess[i] === solution[i]) {
+          newBoard[i] = guess[i].toUpperCase();
+        }
+      }
+      setBoard(newBoard);
+
+      if (guess === solution) {
+        alert("You win!");
+        setSolution(randomWord());
+        setGuess("");
+        setBoard(Array(solution.length).fill(''));
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        handleSubmit(event);
+      }
+    };
+
+    const handleKeyboardClick = (letter) => {
+      setGuess(guess + letter);
+    };
+
+    const handleBackspaceClick = () => {
+      setGuess(guess.slice(0, -1));
+    };
+
+    const letters = "abcdefghijklmnopqrstuvwxyz".split("");
+
+    return (
+      <div>
+        <h1>Wordle Part 2</h1>
+        <div className="grid">
+          {board.map((letter, index) => (
+            <div key={index} className="cell">{letter}</div>
+          ))}
+        </div>
+
+        <div className="keyboard">
+          <div className="keyboard-row">
+            {letters.slice(0, 9).map((letter) => (
+              <div
+                key={letter}
+                className={`key ${guess.includes(letter) ? "selected" : ""}`}
+                onClick={() => handleKeyboardClick(letter)}
+              >
+                {letter}
+              </div>
+            ))}
+          </div>
+          <div className="keyboard-row">
+            {letters.slice(9, 18).map((letter) => (
+              <div
+                key={letter}
+                className={`key ${guess.includes(letter) ? "selected" : ""}`}
+                onClick={() => handleKeyboardClick(letter)}
+              >
+                {letter}
+              </div>
+            ))}
+          </div>
+          <div className="keyboard-row">
+            {letters.slice(18).map((letter) => (
+              <div
+                key={letter}
+                className={`key ${guess.includes(letter) ? "selected" : ""}`}
+                onClick={() => handleKeyboardClick(letter)}
+              >
+                {letter}
+              </div>
+            ))}
+            <div
+              className="key"
+              onClick={handleBackspaceClick}
+              style={{ backgroundColor: "#ff6961" }}
+            >
+              ↩
+            </div>
+            <div
+              className="key"
+              onClick={() => handleSubmit({ key: "Enter" })}
+              style={{ backgroundColor: "#a0d2eb" }}
+            >
+              Enter
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  ReactDOM.render(<App />, document.getElementById('app'));
+
+</script>
+
+</body>
+</html>
