@@ -3,66 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Wordle Part 2</title>
-    <style>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style type="text/css">
     html, body {
     height: 100%;
+    background-color: #d9d9d9;
     }
-
+    
     h1 {
     text-align: center;
     }
 
-    #app {
+    #page {
     display: flex;
-    background-color: #ffffff;
+    background-color: #d9d9d9;
     height: 100%;
     align-items: center;
     flex-direction: column;
     }
 
-    .keyboard {
+    .boardContainer {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 10px;
+    align-items: center;
+    margin-top: 20px;
     }
 
-    .keyboard-row {
+    .boardRow {
     display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 0 auto 8px;
-    touch-action: manipulation;
+    grid-gap: 3px;
+    padding: 3px;
     }
 
-    .key {
-    padding: 10px;
-    cursor: pointer;
-    flex-grow: 1;
-    text-transform: uppercase;
-    margin: 1px;
-    border-radius: 4px;
-    }
-
-    .key:hover {
-    background-color: #ddd;
-    }
-
-    .selected {
-    background-color: #a0d2eb;
-    }
-
-    .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    grid-gap: 5px;
-    padding: 10px;
+    .boardSquare {
     border: 2px solid #a3a3a3;
-    }
-
-    .cell {
-    border: 2px solid #a3a3a3;
+    background-color: #ffffff;
     border-radius: 2px;
     min-width: 60px;
     min-height: 60px;
@@ -72,137 +50,128 @@
     justify-content: center;
     align-items: center;
     }
-    </style>
+
+    .keyboardContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    }
+
+    .keyboardRow {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto 8px;
+    touch-action: manipulation;
+    }
+
+    .keyboardBtn {
+    padding: 10px;
+    cursor: pointer;
+    flex-grow: 1;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1px;
+    border: 2px solid #a3a3a3;
+    background-color: #ffffff;
+    border-radius: 4px;
+    }
+
+    .keyboardBtn:hover {
+    background-color: #88b8eb;
+  }
+  </style>
 </head>
+
 <body>
+    <h1>Wordle Part 2</h1>
+    <div id="page"></div>
 
-<div id="app"></div>
-
-<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-<script type="text/babel">
-
-  const { useState } = React;
-
-  const words = [
-    "might",
-    "flood",
-    "stray",
-  ];
-
-  const randomWord = () => words[Math.floor(Math.random() * words.length)];
-
-  const App = () => {
-    const [solution, setSolution] = useState(randomWord());
-    const [guess, setGuess] = useState("");
-    const [board, setBoard] = useState(Array(solution.length).fill(''));
-
-    const handleInputChange = (event) => {
-      setGuess(event.target.value.toLowerCase().slice(0, solution.length));
-    };
-
-    const handleSubmit = (event) => {
-      event.preventDefault();
-
-      const newBoard = [...board];
-      for (let i = 0; i < solution.length; i++) {
-        if (guess[i] === solution[i]) {
-          newBoard[i] = guess[i].toUpperCase();
+    <script type="text/babel">
+    class WordleGame extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                word: '',
+                words: ['might', 'flood', 'stray'],
+                currentWordIndex: 0
+            };
         }
-      }
-      setBoard(newBoard);
 
-      if (guess === solution) {
-        alert("You win!");
-        setSolution(randomWord());
-        setGuess("");
-        setBoard(Array(solution.length).fill(''));
-      }
-    };
+    deleteLetter() {
+        const { word } = this.state;
+        this.setState({ word: word.slice(0, -1) });
+    }
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Enter") {
-        handleSubmit(event);
-      }
-    };
+    selectLetter(letter) {
+        const { word } = this.state;
+        if (word.length < 30) {
+            this.setState({ word: word + letter });
+        }
+    }
 
-    const handleKeyboardClick = (letter) => {
-      setGuess(guess + letter);
-    };
+    checkAnswer() {
+        const { word, words, currentWordIndex } = this.state;
+        const currentWord = words[currentWordIndex];
+        if (word.toUpperCase() === currentWord) {
+            alert("That's the correct guess, good job!");
+            this.setState({ currentWordIndex: currentWordIndex + 1, word: '' });
+        } else {
+            alert("Not quite, try again...");
+        }
+    }
 
-    const handleBackspaceClick = () => {
-      setGuess(guess.slice(0, -1));
-    };
+    render() {
+        const { word, words, currentWordIndex } = this.state;
+        const currentWord = words[currentWordIndex];
+        return (
+            <div>
+                <div className="boardContainer">
+                {Array.from({ length: 6 }).map((_, rowIndex) => (
+                    <div key={rowIndex} className="boardRow">
+                    {Array.from({ length: 5 }).map((_, colIndex) => (
+                        <div key={colIndex} className="boardSquare">
+                            {word[rowIndex * 6 + colIndex] || ''}
+                        </div>
+                    ))}
+                    </div>
+                ))}
+                </div>
 
-    const letters = "abcdefghijklmnopqrstuvwxyz".split("");
-
-    return (
-      <div>
-        <h1>Wordle Part 2</h1>
-        <div className="grid">
-          {board.map((letter, index) => (
-            <div key={index} className="cell">{letter}</div>
-          ))}
-        </div>
-
-        <div className="keyboard">
-          <div className="keyboard-row">
-            {letters.slice(0, 9).map((letter) => (
-              <div
-                key={letter}
-                className={`key ${guess.includes(letter) ? "selected" : ""}`}
-                onClick={() => handleKeyboardClick(letter)}
-              >
-                {letter}
-              </div>
-            ))}
-          </div>
-          <div className="keyboard-row">
-            {letters.slice(9, 18).map((letter) => (
-              <div
-                key={letter}
-                className={`key ${guess.includes(letter) ? "selected" : ""}`}
-                onClick={() => handleKeyboardClick(letter)}
-              >
-                {letter}
-              </div>
-            ))}
-          </div>
-          <div className="keyboard-row">
-            {letters.slice(18).map((letter) => (
-              <div
-                key={letter}
-                className={`key ${guess.includes(letter) ? "selected" : ""}`}
-                onClick={() => handleKeyboardClick(letter)}
-              >
-                {letter}
-              </div>
-            ))}
-            <div
-              className="key"
-              onClick={handleBackspaceClick}
-              style={{ backgroundColor: "#ff6961" }}
-            >
-              ↩
+            <div className="keyboardContainer">
+            <div className="keyboardRow">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className="keyboardBtn" onClick={() => this.selectLetter(String.fromCharCode(65 + index))}>
+                        {String.fromCharCode(65 + index)}
+                    </div>
+                ))}
             </div>
-            <div
-              className="key"
-              onClick={() => handleSubmit({ key: "Enter" })}
-              style={{ backgroundColor: "#a0d2eb" }}
-            >
-              Enter
+            <div className="keyboardRow">
+                {Array.from({ length: 9 }).map((_, index) => (
+                    <div key={index + 10} className="keyboardBtn" onClick={() => this.selectLetter(String.fromCharCode(75 + index))}>
+                        {String.fromCharCode(75 + index)}
+                    </div>
+                ))}
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+            <div className="keyboardRow">
+                {Array.from({ length: 7 }).map((_, index) => (
+                    <div key={index} className="keyboardBtn" onClick={() => this.selectLetter(String.fromCharCode(84 + index))}>
+                        {String.fromCharCode(84 + index)}
+                    </div>
+                ))}
+            </div>
+            <div className="keyboardRow">
+                <div className="keyboardBtn" onClick={() => this.deleteLetter()}>Delete</div>
+                <div className="keyboardBtn" onClick={() => this.checkAnswer()}>Enter</div>
+            </div>
+            </div>
+            </div>
+        );
+      }
+    }
 
-  ReactDOM.render(<App />, document.getElementById('app'));
-
-</script>
-
+    ReactDOM.render(<WordleGame />, page);
+  </script>
 </body>
 </html>
